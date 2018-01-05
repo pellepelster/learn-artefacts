@@ -1,0 +1,11 @@
+allprojects {
+
+    repositories {
+        mavenCentral()
+    }
+
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+
+    group = "io.pelle"
+}
