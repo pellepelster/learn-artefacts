@@ -1,13 +1,13 @@
-data "aws_ami" "amazon_linux2_ami" {
+data "aws_ami" "amazon_linux2_ami" {//snippet:deploy_aws_ami
   most_recent = true
   name_regex  = "^amzn2-ami-hvm-"
   owners      = ["137112412989"]
-}
+}//eos:deploy_aws_ami
 
-resource "aws_key_pair" "todo_keypair" {
+resource "aws_key_pair" "todo_keypair" { //snippet:deploy_aws_key
   key_name   = "todo_keypair"
   public_key = "${file("~/.ssh/id_rsa.pub")}"
-}
+} //eos:deploy_aws_key
 
 resource "aws_security_group" "todo_instance_ssh_security_group" {
   name   = "todo_instance_ssh_group"
