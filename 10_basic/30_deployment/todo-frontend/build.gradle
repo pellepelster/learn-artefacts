@@ -1,4 +1,5 @@
-buildscript { //snippet:frontend_nodejs_plugin_dependency
+// snippet:frontend_nodejs_plugin_dependency
+buildscript {
 	repositories {
 		maven {
 			url "https://plugins.gradle.org/m2/"
@@ -11,30 +12,38 @@ buildscript { //snippet:frontend_nodejs_plugin_dependency
 }
 
 apply plugin: 'com.moowork.node'
-//eos:frontend_nodejs_plugin_dependency
+// /snippet:frontend_nodejs_plugin_dependency
 
-node { //snippet:frontend_nodejs_plugin_configuration
+// snippet:frontend_nodejs_plugin_configuration
+node {
   version = '6.3.1'
   npmVersion = '4.0.1'
   distBaseUrl = 'https://nodejs.org/dist'
   download = true
   workDir = file("${project.buildDir}/nodejs")
-} //eos:frontend_nodejs_plugin_configuration
+}
+// /snippet:frontend_nodejs_plugin_configuration
 
-task frontendBuild(type: NpmTask) { //snippet:frontend_nodejs_build
+// snippet:frontend_nodejs_build
+task frontendBuild(type: NpmTask) {
 	args = [ 'run', 'build' ]
 }
 
-frontendBuild.dependsOn('npmInstall') //eos:frontend_nodejs_build
+frontendBuild.dependsOn('npmInstall')
+// /snippet:frontend_nodejs_build
 
- task frontendJar(type: Jar) { //snippet:frontend_nodejs_jar
+// snippet:frontend_nodejs_jar
+ task frontendJar(type: Jar) {
  	appendix = 'frontend'
  	into 'frontend'
  	from fileTree('./dist/')
  	destinationDir file(project.buildDir)
 }
 
-frontendJar.dependsOn('frontendBuild')//eos:frontend_nodejs_jar
+frontendJar.dependsOn('frontendBuild')
+// snippet:frontend_nodejs_jar
 
-configurations { frontend }//snippet:frontend_nodejs_gradle_config
-artifacts { frontend frontendJar } //eos:frontend_nodejs_gradle_config
+// snippet:frontend_nodejs_gradle_config
+configurations { frontend }
+artifacts { frontend frontendJar }
+// /snippet:frontend_nodejs_gradle_config

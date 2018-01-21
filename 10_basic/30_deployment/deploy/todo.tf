@@ -1,13 +1,17 @@
-data "aws_ami" "amazon_linux2_ami" {//snippet:deploy_aws_ami
+# snippet:deploy_aws_ami
+data "aws_ami" "amazon_linux2_ami" {
   most_recent = true
   name_regex  = "^amzn2-ami-hvm-"
   owners      = ["137112412989"]
-}//eos:deploy_aws_ami
+}
+# /snippet:deploy_aws_ami
 
-resource "aws_key_pair" "todo_keypair" { //snippet:deploy_aws_key
+# snippet:deploy_aws_key
+resource "aws_key_pair" "todo_keypair" {
   key_name   = "todo_keypair"
   public_key = "${file("~/.ssh/id_rsa.pub")}"
-} //eos:deploy_aws_key
+}
+# /snippet:deploy_aws_key
 
 resource "aws_security_group" "todo_instance_ssh_security_group" {
   name   = "todo_instance_ssh_group"
@@ -47,6 +51,7 @@ resource "aws_security_group" "todo_instance_http_security_group" {
   }
 }
 
+# snippet:deploy_aws_instance
 data "template_file" "todo_systemd_service" {
   template = "${file("todo.service.tpl")}"
 
@@ -98,6 +103,7 @@ resource "aws_instance" "todo_instance" {
     }
   }
 }
+# /snippet:deploy_aws_instance
 
 output "instance_fqdn" {
   value = "${aws_instance.todo_instance.public_dns}"

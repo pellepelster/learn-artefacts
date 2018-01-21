@@ -1,3 +1,5 @@
-provider "aws" { //snippet:deploy_aws_provider
+# snippet:deploy_aws_provider
+provider "aws" {
   region = "eu-central-1"
-} //eos:deploy_aws_provider
+}
+# /snippet:deploy_aws_provider
