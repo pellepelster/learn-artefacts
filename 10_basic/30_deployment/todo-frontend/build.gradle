@@ -41,7 +41,7 @@ frontendBuild.dependsOn('npmInstall')
 }
 
 frontendJar.dependsOn('frontendBuild')
-// snippet:frontend_nodejs_jar
+// /snippet:frontend_nodejs_jar
 
 // snippet:frontend_nodejs_gradle_config
 configurations { frontend }
