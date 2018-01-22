@@ -4,7 +4,7 @@ After=syslog.target
 
 [Service]
 User=todo
-ExecStart=/todo/${application_jar}
+ExecStart=/todo/${var.application_jar}
 SuccessExitStatus=143
 
 [Install]
