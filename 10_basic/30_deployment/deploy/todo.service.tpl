@@ -1,5 +1,5 @@
 [Unit]
-Description=myapp
+Description=todo application
 After=syslog.target
 
 [Service]

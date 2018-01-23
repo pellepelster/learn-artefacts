@@ -1,13 +1,17 @@
+# snippet:deploy_aws_ami
 data "aws_ami" "amazon_linux2_ami" {
   most_recent = true
   name_regex  = "^amzn2-ami-hvm-"
   owners      = ["137112412989"]
 }
+# /snippet:deploy_aws_ami
 
+# snippet:deploy_aws_key
 resource "aws_key_pair" "todo_keypair" {
   key_name   = "todo_keypair"
   public_key = "${file("~/.ssh/id_rsa.pub")}"
 }
+# /snippet:deploy_aws_key
 
 resource "aws_security_group" "todo_instance_ssh_security_group" {
   name   = "todo_instance_ssh_group"
@@ -47,6 +51,7 @@ resource "aws_security_group" "todo_instance_http_security_group" {
   }
 }
 
+# snippet:deploy_aws_instance_systemd_unit
 data "template_file" "todo_systemd_service" {
   template = "${file("todo.service.tpl")}"
 
@@ -54,15 +59,19 @@ data "template_file" "todo_systemd_service" {
     application_jar = "${var.application_jar}"
   }
 }
+# /snippet:deploy_aws_instance_systemd_unit
 
 resource "aws_instance" "todo_instance" {
 
+  # snippet:deploy_aws_instance
   ami             = "${data.aws_ami.amazon_linux2_ami.id}"
   subnet_id       = "${aws_subnet.public_subnet.id}"
   instance_type   = "t2.micro"
   key_name        = "${aws_key_pair.todo_keypair.id}"
   security_groups = ["${aws_security_group.todo_instance_ssh_security_group.id}", "${aws_security_group.todo_instance_http_security_group.id}"]
+  # /snippet:deploy_aws_instance
 
+  # snippet:deploy_aws_instance_jar
   provisioner "file" {
     source      = "../todo-server/build/libs/${var.application_jar}"
     destination = "${var.application_jar}"
@@ -71,7 +80,9 @@ resource "aws_instance" "todo_instance" {
       user = "ec2-user"
     }
   }
+  # /snippet:deploy_aws_instance_jar
 
+  # snippet:deploy_aws_instance_systemd
   provisioner "file" {
     content     = "${data.template_file.todo_systemd_service.rendered}"
     destination = "todo.service"
@@ -80,7 +91,9 @@ resource "aws_instance" "todo_instance" {
       user = "ec2-user"
     }
   }
+  # /snippet:deploy_aws_instance_systemd
 
+  # snippet:deploy_aws_instance_install
   provisioner "remote-exec" {
     inline = [
       "sudo yum install -y java",
@@ -98,6 +111,7 @@ resource "aws_instance" "todo_instance" {
       user = "ec2-user"
     }
   }
+  # /snippet:deploy_aws_instance_install
 
 }
 

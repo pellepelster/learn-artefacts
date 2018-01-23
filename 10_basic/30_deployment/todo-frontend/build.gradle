@@ -1,3 +1,4 @@
+// snippet:frontend_nodejs_plugin_dependency
 buildscript {
 	repositories {
 		maven {
@@ -11,7 +12,9 @@ buildscript {
 }
 
 apply plugin: 'com.moowork.node'
+// /snippet:frontend_nodejs_plugin_dependency
 
+// snippet:frontend_nodejs_plugin_configuration
 node {
   version = '6.3.1'
   npmVersion = '4.0.1'
@@ -19,13 +22,17 @@ node {
   download = true
   workDir = file("${project.buildDir}/nodejs")
 }
+// /snippet:frontend_nodejs_plugin_configuration
 
+// snippet:frontend_nodejs_build
 task frontendBuild(type: NpmTask) {
 	args = [ 'run', 'build' ]
 }
 
 frontendBuild.dependsOn('npmInstall')
+// /snippet:frontend_nodejs_build
 
+// snippet:frontend_nodejs_jar
  task frontendJar(type: Jar) {
  	appendix = 'frontend'
  	into 'frontend'
@@ -34,6 +41,9 @@ frontendBuild.dependsOn('npmInstall')
 }
 
 frontendJar.dependsOn('frontendBuild')
+// /snippet:frontend_nodejs_jar
 
+// snippet:frontend_nodejs_gradle_config
 configurations { frontend }
 artifacts { frontend frontendJar }
+// /snippet:frontend_nodejs_gradle_config
