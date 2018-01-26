@@ -33,8 +33,8 @@ resource "aws_security_group" "todo_instance_http_security_group" {
   vpc_id = "${aws_vpc.todo_vpc.id}"
 
   ingress {
-    from_port   = 8080
-    to_port     = 8080
+    from_port   = 9090
+    to_port     = 9090
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }

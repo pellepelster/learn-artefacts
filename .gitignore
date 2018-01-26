@@ -1,4 +1,6 @@
 .classpath
+.terraform
+*.tfstate
 .project
 .settings
 build
