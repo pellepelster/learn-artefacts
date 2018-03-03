@@ -1,0 +1,16 @@
+buildscript {
+  dependencies {
+    classpath 'gradle.plugin.com.github.lkishalmi.gatling:gradle-gatling-plugin:0.7.1'
+  }
+}
+
+apply plugin: 'scala'
+apply plugin: 'com.github.lkishalmi.gatling'
+
+dependencies {
+    compile "org.scala-lang:scala-library:2.11.1"
+    gatlingCompile "org.scala-lang:scala-library:2.11.1"
+    gatling("io.gatling:gatling-app:2.3.0")
+    compile("io.gatling:gatling-app:2.3.0")
+    gatlingRuntime files("src/gatling/resources/conf")
+}

@@ -1,5 +1,6 @@
 <template>
   <div class="container" style="width: 60%;">
+
     <transition name="fade">
       <div class="alert alert-danger" role="alert" v-for="error in errors">
         {{ error }}
@@ -8,7 +9,7 @@
 
     <div class="row">
       <div class="col">
-        <h1 class="text-center">Todos</h1>
+        <h1 class="text-center">{{ listName }}</h1>
       </div>
     </div>
     <div class="row alert alert-secondary" role="alert">
@@ -16,7 +17,7 @@
         <input type="text" class="form-control" v-model="newTodo" v-on:keyup.13="addTodo">
       </div>
     </div>
-    <div class="row alert alert-primary align-items-center" role="alert" v-for="(todo, index) in todos" :key="todo.id">
+    <div class="row alert alert-primary align-items-center" role="alert" v-for="(todo, index) in todos" :key="todo.uuid">
       <div class="col-11">
         <span v-show="!todo.edit" v-on:click="toggleEdit(index, todo)">{{todo.description}}</span>
         <input type="text" ref="inputs" class="form-control" v-model="todo.description" v-show="todo.edit" v-on:blur="saveEdit(index, todo)">
@@ -39,6 +40,7 @@ export default {
   data () {
     return {
       newTodo: '',
+      listName: '<none>',
       todos: [],
       errors: []
     }
@@ -54,7 +56,7 @@ export default {
       }
     },
     saveEdit (index, todo) {
-      HTTP.put('todos/' + todo.id + '/updateDescription', this.$refs.inputs[index].value)
+      HTTP.put('todoitems/' + todo.uuid + '/updateDescription', this.$refs.inputs[index].value)
       .then(response => {
         this.toggleEdit(index, todo)
       })
@@ -70,15 +72,16 @@ export default {
       }, 3000)
     },
     updateList () {
-      HTTP.get('todos').then(response => {
-        this.todos = response.data.map((todo) => { return { 'id': todo.id, 'description': todo.description, 'edit': false } })
+      HTTP.get('todolists/' + this.$route.params.uuid).then(response => {
+        this.todos = response.data.items.map((todo) => { return { 'uuid': todo.uuid, 'description': todo.description, 'edit': false } })
+        this.listName = response.data.name
       })
       .catch(e => {
         this.errors.push(e)
       })
     },
     addTodo: function () {
-      HTTP.post('todos', {
+      HTTP.post('todoitems/' + this.$route.params.uuid, {
         description: this.newTodo
       })
       .then(response => {
@@ -91,7 +94,7 @@ export default {
       this.newTodo = ''
     },
     deleteTodo: function (todo) {
-      HTTP.delete('todos/' + todo.id).then(response => {
+      HTTP.delete('todoitems/' + todo.uuid).then(response => {
         var index = this.todos.indexOf(todo)
         this.todos.splice(index, 1)
       })
